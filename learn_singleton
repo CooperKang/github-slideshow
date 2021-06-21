@@ -1,0 +1,69 @@
+class DBConn{//static 싱글톤 기법1
+	private static DBConn instance;//static 걸어서 하나만 생성
+	public static DBConn getInstance() {//객체 가져오기
+		if(instance == null) {
+			instance = new DBConn();//없으면 새로 생성하기 --> 메모리 낭비 방지
+		}
+		return instance;//있으면 메모리에 있는 객체 전환
+	}
+	public Connection getConn() {//static 빠짐
+		Connection con = null;
+		
+		try {
+			Class.forName("org.mariadb.jdbc.Driver");
+			String url = "jdbc:mariadb://localhost:3306/ramg";
+			con = DriverManager.getConnection(url,"root", "990212");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return con;
+	}
+}
+class DBConn2{
+	private static DBConn2 dbConn = new DBConn2();//객체 생성
+	
+	public static DBConn2 getInstance() {
+		return dbConn;//객체 반환
+	}
+	public Connection getConn() {//static 빠짐
+		Connection con = null;
+		
+		try {
+			Class.forName("org.mariadb.jdbc.Driver");
+			String url = "jdbc:mariadb://localhost:3306/ramg";
+			con = DriverManager.getConnection(url,"root", "990212");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return con;
+	}
+}
+//Bill Pugh방법으로 싱글톤 만들기
+class Pugh{
+	private static class SingletonConn{
+		private static final Pugh instance = new Pugh();
+		//instance 객체 생성하기
+	}
+	public Pugh() {//생성자
+		System.out.println("생성자가 호출되었습니다.");
+	}
+	public static Pugh getInstance() {
+		return SingletonConn.instance;
+	}
+	//Connection을 반환하는 DBConn() 만들어주시면 됩니다.
+	public Connection getConn() {
+		Connection con = null;
+		
+		try {
+			Class.forName("org.mariadb.jdbc.Driver");
+			String url = "jdbc:mariadb://localhost:3306/ramg";
+			con = DriverManager.getConnection(url,"root", "990212");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return con;
+	}
+}
